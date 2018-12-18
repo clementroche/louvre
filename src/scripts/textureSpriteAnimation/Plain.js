@@ -8,19 +8,23 @@ export default class Plain {
     this.height = height || 1;
     this.vertexCountX = vertexCount / 2;
     this.vertexCountY = vertexCount / 2;
-    this.geometry = new THREE.PlaneGeometry(
+    this.geometry = new THREE.BoxGeometry(
       this.width,
       this.height,
+      0.01,
       this.vertexCountX,
       this.vertexCountY
     );
 
-    this.material = new THREE.MeshPhongMaterial({
+    this.material = new THREE.MeshStandardMaterial({
       map: this.texture,
       transparent: true,
-      alphaTest: 0.5
+      alphaTest: 0.5,
+      // color:Math.random()*0x00ffff
     });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
+    // this.mesh.castShadow = true;
+    // this.mesh.receiveShadow = true;
     this.mesh.position.set(this.x, this.y, this.z);
   }
 }

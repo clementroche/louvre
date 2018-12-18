@@ -22,7 +22,7 @@ import vs from "src/shaders/vertex/shader.glsl";
 import fs from "src/shaders/fragment/shader.glsl";
 
 
-import {scene1img} from './sceneImport.js'
+import {scene1img,scene2img,scene3img} from './sceneImport.js'
 
 // console.log(scene1[Object.keys(scene1)[0]])
 
@@ -39,10 +39,10 @@ export default class App {
       0.1,
       1000
     );
-    this.camera.position.z = 2;
+    this.camera.position.z = 4.1;
 
     this.controls = new OrbitControls(this.camera);
-    this.controls.enabled = true;
+    this.controls.enabled = false;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
     this.intersects = [];
@@ -69,41 +69,34 @@ export default class App {
     this.backgroundTiles.push(background);
     this.backgroundTiles.map((texture, index) => {
       let textureLoaded = new THREE.TextureLoader().load(texture);
-      let tube = new Plain(textureLoaded, 0, index, -index / 100, 5, 10);
+      let tube = new Plain(textureLoaded, 0, index, -index / 100, 50, 11);
       this.scene.add(tube.mesh);
       tube.mesh.position.set(0,-tube.height/2,0)
       return tube;
     });
 
-    this.animatedTiles.push(poisson);
-    this.animatedTiles.map((texture, index) => {
-      let textureLoaded = new THREE.TextureLoader().load(texture);
-      let tube = new Plain(textureLoaded, 0, 0, -2, 0.5, 0.25, 30);
-      this.scene.add(tube.mesh);
+    // this.animatedTiles.push(poisson);
+    // this.animatedTiles.map((texture, index) => {
+    //   let textureLoaded = new THREE.TextureLoader().load(texture);
+    //   let tube = new Plain(textureLoaded, 0, 0, -2, 0.5, 0.25, 30);
+    //   this.scene.add(tube.mesh);
       
-      return tube;
-    });
+    //   return tube;
+    // });
 
-    this.layer = 0.25
+    this.layer = 0.10
 
-    let scene1 = new Scene(scene1img)
-    this.scene.add(scene1.group)
+    this.scene1 = new Scene(scene1img)
+    this.scene.add(this.scene1.group)
+    this.scene1.group.position.set(0,-5,0)
 
-    // for(let i=0; i<Object.keys(scene1).length;i++) {
-    //   this.illustration = []
-    //   this.illustration.push(scene1[Object.keys(scene1)[i]]);
-    //   this.illustration.map((texture, index) => {
-    //     let layer = parseInt(Object.keys(scene1)[i].match(/(LAYER:\d+(\.\d)*)/g)[0].split('LAYER:')[1])
-    //     console.log(layer)
-    //     let textureLoaded = new THREE.TextureLoader().load(texture);
-    //     let illu = new Plain(textureLoaded, 0, 0, this.layer*layer, 5, 5, 30);
-    //     this.scene.add(illu.mesh);
-    //     illu.mesh.rotation.set(0,-180* Math.PI/180,180* Math.PI/180)
-    //     illu.mesh.scale.set(1,-1,-1)
-  
-    //     return illu;
-    //   });
-    // }
+    this.scene2 = new Scene(scene2img)
+    this.scene.add(this.scene2.group)
+    this.scene2.group.position.set(0,-12,0)
+
+    this.scene3 = new Scene(scene3img)
+    this.scene.add(this.scene3.group)
+    this.scene3.group.position.set(0,-22,0)
 
 
 
@@ -117,12 +110,32 @@ export default class App {
     let ambientLight = new THREE.AmbientLight(0x505050);
     this.scene.add(ambientLight);
 
-    let pointLight = new THREE.PointLight(0xffffff, 1, 10);
-    this.scene.add(pointLight);
+    // let pointLight = new THREE.PointLight(0xffffff, 0.8, 18);
+    // pointLight.position.set(0,-5,4)
+    // pointLight.castShadow = true;
+
+    // pointLight.shadow.mapSize.width = 512;  // default
+    // pointLight.shadow.mapSize.height = 512; // default
+    // pointLight.shadow.camera.near = 0.1;       // default
+    // pointLight.shadow.camera.far = 500      // default
+
+    // this.scene.add(pointLight);
+
+    var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+  this.scene.add( directionalLight );
+  directionalLight.position.set(0,-5,4)
+
+
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.BasicShadowMap; // default THREE.PCFShadowMap
+    this.renderer.renderReverseSided = true;
+    this.renderer.renderSingleSided = true;
     this.container.appendChild(this.renderer.domElement);
+
+
 
     let runnerTexture = new THREE.TextureLoader().load(poisson);
     this.annie = new TextureAnimator(runnerTexture, 12, 1, 12, 75); // texture, #horiz, #vert, #total, duration.
