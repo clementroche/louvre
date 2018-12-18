@@ -23,8 +23,6 @@ export default class Plain {
       // color:Math.random()*0x00ffff
     });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    // this.mesh.castShadow = true;
-    // this.mesh.receiveShadow = true;
     this.mesh.position.set(this.x, this.y, this.z);
   }
 }

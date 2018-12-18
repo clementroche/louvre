@@ -39,10 +39,10 @@ export default class App {
       0.1,
       1000
     );
-    this.camera.position.z = 4.1;
+    this.camera.position.z = 5;
 
     this.controls = new OrbitControls(this.camera);
-    this.controls.enabled = false;
+    this.controls.enabled = true;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
     this.intersects = [];
@@ -69,34 +69,29 @@ export default class App {
     this.backgroundTiles.push(background);
     this.backgroundTiles.map((texture, index) => {
       let textureLoaded = new THREE.TextureLoader().load(texture);
-      let tube = new Plain(textureLoaded, 0, index, -index / 100, 50, 11);
+      let tube = new Plain(textureLoaded, 0, index, -index / 100, 10, 10);
       this.scene.add(tube.mesh);
       tube.mesh.position.set(0,-tube.height/2,0)
       return tube;
     });
 
-    // this.animatedTiles.push(poisson);
-    // this.animatedTiles.map((texture, index) => {
-    //   let textureLoaded = new THREE.TextureLoader().load(texture);
-    //   let tube = new Plain(textureLoaded, 0, 0, -2, 0.5, 0.25, 30);
-    //   this.scene.add(tube.mesh);
-      
-    //   return tube;
-    // });
-
     this.layer = 0.10
 
-    this.scene1 = new Scene(scene1img)
+    this.scene1 = new Scene(scene1img,1)
     this.scene.add(this.scene1.group)
+    
     this.scene1.group.position.set(0,-5,0)
+    
 
-    this.scene2 = new Scene(scene2img)
+    this.scene2 = new Scene(scene2img,2)
     this.scene.add(this.scene2.group)
-    this.scene2.group.position.set(0,-12,0)
+    this.scene2.group.position.set(0,-10,0)
+    
 
-    this.scene3 = new Scene(scene3img)
+    this.scene3 = new Scene(scene3img,3)
     this.scene.add(this.scene3.group)
-    this.scene3.group.position.set(0,-22,0)
+    this.scene3.group.position.set(0,-15,0)
+    
 
 
 
@@ -129,37 +124,34 @@ export default class App {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.BasicShadowMap; // default THREE.PCFShadowMap
-    this.renderer.renderReverseSided = true;
-    this.renderer.renderSingleSided = true;
+    this.render.sortObjects = true;
     this.container.appendChild(this.renderer.domElement);
 
 
 
-    let runnerTexture = new THREE.TextureLoader().load(poisson);
-    this.annie = new TextureAnimator(runnerTexture, 12, 1, 12, 75); // texture, #horiz, #vert, #total, duration.
-    // var material = new THREE.ShaderMaterial({
-    //   uniforms: {
-    //     time: { value: 1.0 },
-    //     resolution: { value: new THREE.Vector2() },
-    //     color: { value: new THREE.Vector3(1, 0.2, 0.5, 1.0) },
-    //     texture: {
-    //       type: "t",
-    //       value: new THREE.TextureLoader().load(textureColor)
-    //     }
-    //   },
-    //   vertexShader: vs,
-    //   fragmentShader: fs
+    // let runnerTexture = new THREE.TextureLoader().load(poisson);
+    // this.annie = new TextureAnimator(runnerTexture, 12, 1, 12, 75); // texture, #horiz, #vert, #total, duration.
+    // // var material = new THREE.ShaderMaterial({
+    // //   uniforms: {
+    // //     time: { value: 1.0 },
+    // //     resolution: { value: new THREE.Vector2() },
+    // //     color: { value: new THREE.Vector3(1, 0.2, 0.5, 1.0) },
+    // //     texture: {
+    // //       type: "t",
+    // //       value: new THREE.TextureLoader().load(textureColor)
+    // //     }
+    // //   },
+    // //   vertexShader: vs,
+    // //   fragmentShader: fs
+    // // });
+    // var material = new THREE.MeshPhongMaterial({
+    //   map: runnerTexture,
+    //   transparent: true,
+    //   side: THREE.DoubleSide
     // });
-    var material = new THREE.MeshPhongMaterial({
-      map: runnerTexture,
-      transparent: true,
-      side: THREE.DoubleSide
-    });
-    var geometry = new THREE.PlaneGeometry(1, 1, 1);
-    var cube = new THREE.Mesh(geometry, material);
-    this.scene.add(cube);
+    // var geometry = new THREE.PlaneGeometry(1, 1, 1);
+    // var cube = new THREE.Mesh(geometry, material);
+    // this.scene.add(cube);
 
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
     this.onWindowResize();
@@ -206,7 +198,7 @@ export default class App {
 
     var delta = this.clock.getDelta();
 
-    this.annie.update(1000 * delta);
+    // this.annie.update(1000 * delta);
 
     // this.annie.update(1000 * this.time);
     this.renderer.render(this.scene, this.camera);
