@@ -16,7 +16,8 @@ function importAll(r) {
   let scene1img = importAll(require.context('src/assets/scene1', false, /\.(png|jpe?g|svg)$/));
   let scene2img = importAll(require.context('src/assets/scene2', false, /\.(png|jpe?g|svg)$/));
   let scene3img = importAll(require.context('src/assets/scene3', false, /\.(png|jpe?g|svg)$/));
+  let scene4img = importAll(require.context('src/assets/scene4', false, /\.(png|jpe?g|svg)$/));
 
 export{
-    scene1img,scene2img,scene3img
+    scene1img,scene2img,scene3img,scene4img
 }

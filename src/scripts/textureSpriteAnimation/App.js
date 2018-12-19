@@ -22,7 +22,7 @@ import vs from "src/shaders/vertex/shader.glsl";
 import fs from "src/shaders/fragment/shader.glsl";
 
 
-import {scene1img,scene2img,scene3img} from './sceneImport.js'
+import {scene1img,scene2img,scene3img,scene4img} from './sceneImport.js'
 
 // console.log(scene1[Object.keys(scene1)[0]])
 
@@ -39,7 +39,9 @@ export default class App {
       0.1,
       1000
     );
-    this.camera.position.z = 5;
+    this.camera.position.z = 10;
+
+
 
     this.controls = new OrbitControls(this.camera);
     this.controls.enabled = true;
@@ -69,7 +71,8 @@ export default class App {
     this.backgroundTiles.push(background);
     this.backgroundTiles.map((texture, index) => {
       let textureLoaded = new THREE.TextureLoader().load(texture);
-      let tube = new Plain(textureLoaded, 0, index, -index / 100, 10, 10);
+      let d = this.getDimensionsFromDistance(this.camera.position.z)
+      let tube = new Plain(textureLoaded, 0, index, -index / 100, d.width*100, d.height*100);
       this.scene.add(tube.mesh);
       tube.mesh.position.set(0,-tube.height/2,0)
       return tube;
@@ -77,20 +80,23 @@ export default class App {
 
     this.layer = 0.10
 
-    this.scene1 = new Scene(scene1img,1)
+    this.scene1 = new Scene(scene1img,this.camera,1)
     this.scene.add(this.scene1.group)
-    
     this.scene1.group.position.set(0,-5,0)
     
 
-    this.scene2 = new Scene(scene2img,2)
+    this.scene2 = new Scene(scene2img,this.camera,2)
     this.scene.add(this.scene2.group)
-    this.scene2.group.position.set(0,-10,0)
+    this.scene2.group.position.set(0,-22,0)
     
 
-    this.scene3 = new Scene(scene3img,3)
+    this.scene3 = new Scene(scene3img,this.camera,3)
     this.scene.add(this.scene3.group)
-    this.scene3.group.position.set(0,-15,0)
+    this.scene3.group.position.set(0,-56,0)
+
+    this.scene4 = new Scene(scene4img,this.camera,4)
+    this.scene.add(this.scene4.group)
+    this.scene4.group.position.set(0,-73,0)
     
 
 
@@ -208,5 +214,15 @@ export default class App {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  getDimensionsFromDistance(dist) {
+    let vFOV = THREE.Math.degToRad( this.camera.fov )
+    let height = 2 * Math.tan( vFOV / 2 ) * dist
+    let width = height * this.camera.aspect
+    return {
+      height : height,
+      width : width
+    }
   }
 }
