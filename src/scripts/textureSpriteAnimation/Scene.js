@@ -6,8 +6,6 @@ export default class Scene {
         this.camera = camera;
         this.images = images
         this.index = index.toString()
-        this.maxLayer = 14
-        console.log('max',this.maxLayer)
         this.illustrations = []
         this.addImages()
         
@@ -20,11 +18,10 @@ export default class Scene {
             mesh.map((texture, index) => {
               let layer = parseInt(Object.keys(this.images)[i].match(/(LAYER_\d+(\.\d)*)/g)[0].split('LAYER_')[1])
                 layer *= 0.5
-                let d = this.getDimensionsFromDistance(10-layer)
+                let d = this.getDimensionsFromDistance(this.camera.position.z-layer)
               let height = parseInt(Object.keys(this.images)[i].match(/(SIZE_\d+(\.\d)*)/g)[0].split('SIZE_')[1])/1920
               let textureLoaded = new THREE.TextureLoader().load(texture);
               let illu = new Plain(textureLoaded, 0, 0, layer, d.width, d.width*height, 1);
-              //let illu = new Plain(textureLoaded, 0, 0, layer*0.25, 5*layer, 5*layer*height, 1);
 
 
               illu.mesh.rotation.set(0,-180* Math.PI/180,180* Math.PI/180)
